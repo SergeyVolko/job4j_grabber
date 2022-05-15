@@ -37,13 +37,13 @@ public class AlertRabbit implements AutoCloseable {
     }
 
     public static void main(String[] args) {
-        try {
-            AlertRabbit alertRabbit = new AlertRabbit();
-            alertRabbit.init("rabbit.properties");
+        AlertRabbit alertRabbit = new AlertRabbit();
+        alertRabbit.init("rabbit.properties");
+        try (Connection connection = alertRabbit.connection) {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
-            data.put("connection", alertRabbit.connection);
+            data.put("connection", connection);
             JobDetail job = newJob(Rabbit.class)
                     .usingJobData(data)
                     .build();
@@ -76,7 +76,7 @@ public class AlertRabbit implements AutoCloseable {
         }
 
         @Override
-        public void execute(JobExecutionContext context) throws JobExecutionException {
+        public void execute(JobExecutionContext context) {
             System.out.println("Rabbit runs here ...");
             Connection connection = (Connection) context
                     .getJobDetail()
