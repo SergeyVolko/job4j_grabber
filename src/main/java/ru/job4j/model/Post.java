@@ -10,32 +10,61 @@ public class Post {
     private int id;
     private String title;
     private String link;
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created;
 
-    public Post(String title, String link) {
+    public Post(int id, String title, String link, LocalDateTime created) {
+        this.id = id;
         this.title = title;
         this.link = link;
+        this.created = created;
+    }
+
+    public Post(String title, String link, LocalDateTime created) {
+        this.title = title;
+        this.link = link;
+        this.created = created;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Post post = (Post) o;
-        return id == post.id;
+        return this == o;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(this);
     }
 
     @Override
