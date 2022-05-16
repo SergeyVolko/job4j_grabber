@@ -59,12 +59,19 @@ public class Post {
 
     @Override
     public boolean equals(Object o) {
-        return this == o;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Post post = (Post) o;
+        return id == post.id && link.equals(post.link);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this);
+        return Objects.hash(id, link);
     }
 
     @Override
