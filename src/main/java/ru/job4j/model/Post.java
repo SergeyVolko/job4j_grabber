@@ -92,6 +92,12 @@ public class Post {
                 + ", title='" + title + '\''
                 + ", link='" + link + '\''
                 + ", created=" + created.format(FORMATTER)
+                + "\n"
+                + "-".repeat(120)
+                + "\n"
+                + description
+                + "-".repeat(120)
+                + "\n"
                 + '}';
     }
 }
