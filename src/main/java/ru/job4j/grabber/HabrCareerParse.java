@@ -15,6 +15,8 @@ import java.util.List;
 
 public class HabrCareerParse implements Parse {
 
+    public static final int PAGES = 5;
+
     private static final String SOURCE_LINK = "https://career.habr.com";
 
     private static final String PAGE_LINK =
@@ -40,16 +42,18 @@ public class HabrCareerParse implements Parse {
     }
 
     @Override
-    public List<Post> list(String link) throws IOException {
-        int page = 1;
+    public List<Post> list(String link) {
         List<Post> posts = new ArrayList<>();
-            Document document = getDocument(PAGE_LINK + page);
-            while (document.getElementsByClass("no-content").text().isEmpty()) {
+        Document document;
+        try {
+            for (int i = 1; i <= PAGES; i++) {
+                document = getDocument(PAGE_LINK + i);
                 Elements rows = document.select(".vacancy-card__inner");
                 rows.forEach(row -> posts.add(getPost(row)));
-                page++;
-                document = getDocument(PAGE_LINK + page);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return posts;
     }
 
@@ -65,7 +69,7 @@ public class HabrCareerParse implements Parse {
     }
 
     public void showFirstFiveVacancies() throws IOException {
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= PAGES; i++) {
             Document document = getDocument(PAGE_LINK + i);
             Elements rows = document.select(".vacancy-card__inner");
             rows.forEach(row -> {
