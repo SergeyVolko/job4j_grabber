@@ -96,6 +96,7 @@ public class Post {
                 + "-".repeat(120)
                 + "\n"
                 + description
+                + "\n"
                 + "-".repeat(120)
                 + "\n"
                 + '}';
