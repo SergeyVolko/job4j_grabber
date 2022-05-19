@@ -14,21 +14,17 @@ public class PsqlStore implements Store, AutoCloseable {
 
     private Connection cnn;
 
-    public PsqlStore(Properties cfg) {
+    public PsqlStore(Properties cfg) throws Exception {
         try {
             Class.forName(cfg.getProperty("jdbc.driver"));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-        try {
-            cnn = DriverManager.getConnection(
-                    cfg.getProperty("url"),
-                    cfg.getProperty("username"),
-                    cfg.getProperty("password")
-            );
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        cnn = DriverManager.getConnection(
+                cfg.getProperty("url"),
+                cfg.getProperty("username"),
+                cfg.getProperty("password")
+        );
     }
 
     @Override
@@ -73,7 +69,6 @@ public class PsqlStore implements Store, AutoCloseable {
         try (PreparedStatement statement =
                      cnn.prepareStatement("select * from post where id = ?")) {
             statement.setInt(1, id);
-            statement.execute();
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     post = getPost(resultSet);
@@ -102,16 +97,23 @@ public class PsqlStore implements Store, AutoCloseable {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         Properties properties = new Properties();
         try (InputStream in =
                      PsqlStore.class.getClassLoader().getResourceAsStream("app.properties")) {
             properties.load(in);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        PsqlStore psqlStore = new PsqlStore(properties);
-        psqlStore.save(new Post("name3", "http3", "desc3", LocalDateTime.now()));
-        List<Post> posts = psqlStore.getAll();
-        posts.forEach(System.out::println);
-        System.out.println(psqlStore.findById(8));
+
+        try (PsqlStore psqlStore = new PsqlStore(properties)) {
+            psqlStore.save(new Post("name3", "http3", "desc3", LocalDateTime.now()));
+            List<Post> posts = psqlStore.getAll();
+            posts.forEach(System.out::println);
+            System.out.println(psqlStore.findById(8));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
