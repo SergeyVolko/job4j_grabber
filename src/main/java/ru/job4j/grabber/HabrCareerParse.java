@@ -47,7 +47,7 @@ public class HabrCareerParse implements Parse {
         Document document;
         try {
             for (int i = 1; i <= PAGES; i++) {
-                document = getDocument(PAGE_LINK + i);
+                document = getDocument(link + i);
                 Elements rows = document.select(".vacancy-card__inner");
                 rows.forEach(row -> posts.add(getPost(row)));
             }
