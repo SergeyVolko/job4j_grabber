@@ -5,7 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import ru.job4j.grabber.utils.DateTimeParser;
-import ru.job4j.grabber.utils.HarbCareerDateTimeParser;
+import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 import ru.job4j.model.Post;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class HabrCareerParse implements Parse {
 
     private static final String SOURCE_LINK = "https://career.habr.com";
 
-    private static final String PAGE_LINK =
+    public static final String PAGE_LINK =
             String.format("%s/vacancies/java_developer?page=", SOURCE_LINK);
     private final DateTimeParser dateTimeParser;
 
@@ -81,8 +81,12 @@ public class HabrCareerParse implements Parse {
         }
     }
 
+    public String getPageLink() {
+        return PAGE_LINK;
+    }
+
     public static void main(String[] args) throws IOException {
-        HabrCareerParse parser = new HabrCareerParse(new HarbCareerDateTimeParser());
+        HabrCareerParse parser = new HabrCareerParse(new HabrCareerDateTimeParser());
         List<Post> posts = parser.list(PAGE_LINK);
         posts.forEach(System.out::println);
     }
