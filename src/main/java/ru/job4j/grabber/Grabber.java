@@ -8,7 +8,6 @@ import ru.job4j.model.Post;
 import java.io.*;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
@@ -55,18 +54,12 @@ public class Grabber implements Grab {
     public static class GrabJob implements Job {
 
         @Override
-        public void execute(JobExecutionContext context) throws JobExecutionException {
+        public void execute(JobExecutionContext context) {
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
             List<Post> websitePosts = parse.list(HabrCareerParse.PAGE_LINK);
-            List<Post> bdPosts = store.getAll();
-            websitePosts.stream()
-                    .filter(p -> !(bdPosts.stream()
-                            .map(Post::getLink)
-                            .collect(Collectors.toList()))
-                            .contains(p.getLink()))
-                    .forEach(store::save);
+            websitePosts.forEach(store::save);
         }
     }
 
